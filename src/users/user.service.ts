@@ -10,6 +10,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
+
   async create(user: UserDTO) {
     this.userRepository.save(this.userRepository.create(user));
   }
@@ -19,7 +20,12 @@ export class UserService {
     return users;
   }
 
-  async findById(id: number) {
+  async delete(id: string) {
+    console.log(this.findById(id));
+    this.userRepository.delete(id);
+  }
+
+  async findById(id: string) {
     const user = this.userRepository.findOne({ where: { id } });
     return user ? user : 'Nenhum user com esse id';
   }

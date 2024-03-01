@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { UserDTO } from 'src/users/user.dto';
 import { UserService } from 'src/users/user.service';
 
@@ -6,9 +6,8 @@ import { UserService } from 'src/users/user.service';
 export class UserController {
   constructor(private userService: UserService) {}
   @Get()
-  async getUser() {
-    const users = this.userService.findAll();
-    return users;
+  async getUser(@Query('id') id: string) {
+    return id ? this.userService.findById(id) : this.userService.findAll();
   }
 
   @Post()
@@ -16,9 +15,12 @@ export class UserController {
     this.userService.create(user);
   }
 
-  @Get(':id')
-  async getIdByUser(@Param('id') id: number) {
-    const user = this.userService.findById(id);
-    return user ? user : 'User not found';
+  //TODO: ADD PERMISSION TO DELETE AN USER
+  @Delete()
+  async deleteUserById(@Query('id') id: string) {
+    if (!id) {
+      return { message: 'You must provide an id' };
+    }
+    this.userService.delete(id);
   }
 }
