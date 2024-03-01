@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UserDTO } from 'src/users/user.dto';
 import { UserService } from 'src/users/user.service';
 
@@ -22,5 +30,13 @@ export class UserController {
       return { message: 'You must provide an id' };
     }
     this.userService.delete(id);
+  }
+
+  @Patch()
+  async patchUserById(@Body('id') id: string, @Body('newEmail') email: string) {
+    if (!id || !email) {
+      return { message: 'You must provide an id and email' };
+    }
+    this.userService.updateEmail(id, email);
   }
 }

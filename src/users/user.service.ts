@@ -29,4 +29,8 @@ export class UserService {
     const user = this.userRepository.findOne({ where: { id } });
     return user ? user : 'Nenhum user com esse id';
   }
+
+  async updateEmail(id: string, email: string) {
+    this.userRepository.update({ id }, { email });
+  }
 }
