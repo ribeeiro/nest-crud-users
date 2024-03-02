@@ -21,13 +21,17 @@ export class UserService {
   }
 
   async delete(id: string) {
-    console.log(this.findById(id));
     this.userRepository.delete(id);
   }
 
   async findById(id: string) {
     const user = this.userRepository.findOne({ where: { id } });
     return user ? user : 'Nenhum user com esse id';
+  }
+
+  async findByEmail(email: string): Promise<UserEntity> {
+    const user = this.userRepository.findOne({ where: { email } });
+    return user;
   }
 
   async updateEmail(id: string, email: string) {

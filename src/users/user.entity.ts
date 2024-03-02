@@ -21,6 +21,9 @@ export class UserEntity {
   @Column()
   age: number;
 
+  @Column()
+  password: string;
+
   @CreateDateColumn()
   created_at: string;
 
