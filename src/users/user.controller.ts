@@ -6,7 +6,9 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { UserDTO } from 'src/users/user.dto';
 import { UserService } from 'src/users/user.service';
 
@@ -20,10 +22,14 @@ export class UserController {
 
   @Post()
   async createUser(@Body() user: UserDTO) {
-    this.userService.create(user);
+    try {
+      this.userService.create(user);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
-  //TODO: ADD PERMISSION TO DELETE AN USER
+  @UseGuards(AuthGuard)
   @Delete()
   async deleteUserById(@Query('id') id: string) {
     if (!id) {
