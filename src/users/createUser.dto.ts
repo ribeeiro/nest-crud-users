@@ -1,15 +1,6 @@
-import {
-  IsUUID,
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class UserDTO {
-  @IsUUID()
-  id: string;
-
+export class CreateUserDTO {
   @IsEmail()
   email: string;
 

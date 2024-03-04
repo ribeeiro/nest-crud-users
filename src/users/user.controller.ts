@@ -3,46 +3,66 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { UserDTO } from 'src/users/user.dto';
 import { UserService } from 'src/users/user.service';
+import { CreateUserDTO } from './createUser.dto';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @UseGuards(AuthGuard)
+  @Get(':id')
+  async getUserById(
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: string,
+  ) {
+    return this.userService.findById(id);
+  }
+
   @Get()
-  async getUser(@Query('id') id: string) {
-    return id ? this.userService.findById(id) : this.userService.findAll();
+  async getUsers() {
+    return this.userService.findAll();
   }
 
   @Post()
-  async createUser(@Body() user: UserDTO) {
-    try {
-      this.userService.create(user);
-    } catch (e) {
-      console.error(e);
-    }
+  async createUser(@Body() user: CreateUserDTO) {
+    this.userService.create(user);
   }
 
   @UseGuards(AuthGuard)
-  @Delete()
-  async deleteUserById(@Query('id') id: string) {
-    if (!id) {
-      return { message: 'You must provide an id' };
-    }
+  @Delete(':id')
+  async deleteUserById(
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: string,
+  ) {
     this.userService.delete(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch()
-  async patchUserById(@Body('id') id: string, @Body('newEmail') email: string) {
-    if (!id || !email) {
-      return { message: 'You must provide an id and email' };
-    }
-    this.userService.updateEmail(id, email);
+  async patchUserPasswordById(
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+    )
+    id: string,
+    @Body('password')
+    password: string,
+  ) {
+    this.userService.updatePassword(id, password);
   }
 }
