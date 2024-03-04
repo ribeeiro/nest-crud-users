@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from 'src/users/user.service';
-import { CreateUserDTO } from './createUser.dto';
+import { CreateUserDTO } from './dtos/createUser.dto';
 
 @Controller('users')
 export class UserController {
