@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/users/user.service';
+import { LoginDTO } from './dtos/LoginDTO';
 
 @Injectable()
 export class AuthService {
@@ -9,7 +10,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn({ email, password }: Record<'email' | 'password', string>) {
+  async signIn({ email, password }: LoginDTO) {
     const user = await this.userService.findByEmail(email);
     if (!user) return { message: 'Nenhum usuario com esse email' };
     if (user.password !== password) return 'Não Logado';
